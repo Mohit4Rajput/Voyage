@@ -1,0 +1,15 @@
+{
+  "departure_location": "Bengaluru, India",
+  "start_date": "2026-11-08",
+  "end_date": "2026-11-10",
+  "number_of_days": 3,
+  "budget_per_person_minor": 2000000,
+  "currency": "INR",
+  "adults": 2,
+  "child_ages": [],
+  "rooms": 1,
+  "moods": ["nature", "rest", "local culture"],
+  "intent": "A restorative short break with local experiences, avoiding famous crowded attractions and exhausting detours.",
+  "constraints": "Domestic India only. Reliable public transport or licensed transfers. No isolated late-night arrivals.",
+  "entry_eligibility": "Domestic travel only; international travel excluded."
+}

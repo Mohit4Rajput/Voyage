@@ -1,0 +1,8 @@
+{
+  "provider": "openrouter",
+  "model": "nvidia/nemotron-3-super-120b-a12b:free",
+  "tested_at": "2026-10-15T10:00:21.647Z",
+  "search_provider": "tavily",
+  "paid_fallback_enabled": false,
+  "note": "Small integration smoke test; not a full research quality benchmark."
+}
