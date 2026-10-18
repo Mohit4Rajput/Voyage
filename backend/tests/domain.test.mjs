@@ -71,3 +71,12 @@ test('unsourced rest/planning days are explicitly unverified rather than given i
   assert.equal(checked.days[1].evidence_status,'unverified_planning_suggestion');
   assert.deepEqual(checked.days[1].source_ids,[]);
 });
+
+test('blank itinerary time slots remain explicit gaps instead of discarding the plan',()=>{
+  const b=normalizeBrief(brief),raw=plan();raw.days.at(-1).evening='';
+  const out=validatePlan(raw,b,sources);
+  assert.deepEqual(out.days.at(-1).unfilled_slots,['evening']);
+  assert.match(out.days.at(-1).evening,/remains unplanned/);
+  assert.equal(out.days.length,b.number_of_days);
+  raw.days[0].morning={unexpected:true};assert.throws(()=>validatePlan(raw,b,sources));
+});

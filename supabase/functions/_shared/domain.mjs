@@ -208,7 +208,16 @@ export function validatePlan(output, brief, sources) {
     const overnightBase = day.overnight_base === null ? null : text(day.overnight_base, 'overnight base', 160);
     ensure(i === brief.number_of_days - 1 ? overnightBase === null : bases.some(b => b.name === overnightBase), 'Overnight base must match a declared base; departure day has no overnight.');
     const refs = sourceIds(day.source_ids, allowed, false);
-    return { date: expectedDate, overnight_base: overnightBase, morning: text(day.morning, 'morning', 1500), afternoon: text(day.afternoon, 'afternoon', 1500), evening: text(day.evening, 'evening', 1500), transit: text(day.transit, 'transit', 1000), source_ids: refs,
+    const unfilledSlots=[];
+    const slot=(key,max)=>{
+      if(day[key]===undefined||day[key]===null||(typeof day[key]==='string'&&!day[key].trim())){
+        unfilledSlots.push(key);
+        return key==='transit'?'Transfer details were not supplied. Confirm routes and timings before travel.':`No researched ${key} activity was supplied. This time remains unplanned.`;
+      }
+      return text(day[key],key,max);
+    };
+    const activities={morning:slot('morning',1500),afternoon:slot('afternoon',1500),evening:slot('evening',1500),transit:slot('transit',1000)};
+    return { date: expectedDate, overnight_base: overnightBase, ...activities, unfilled_slots:unfilledSlots, source_ids: refs,
       evidence_status: refs.length ? 'referenced_web_research' : 'unverified_planning_suggestion',
       optional: strings(day.optional ?? [], 'optional activities', 4) };
   });
