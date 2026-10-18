@@ -20,10 +20,13 @@ export async function createLocalDatabase(dataDir, { dailyResearchLimit = 20 } =
     create or replace function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
     grant usage on schema auth to anon,authenticated,service_role;`);
   for(const file of (await fs.readdir(path.join(root,'supabase/migrations'))).filter(f=>f.endsWith('.sql')).sort()){
+    const source=await fs.readFile(path.join(root,'supabase/migrations',file),'utf8');
+    // Preserve hosted CLI history without introducing the retired discovery/vault stack into PGlite.
+    if(source.startsWith('-- HOSTED HISTORY ONLY:'))continue;
     const applied=await db.query('select 1 from public.local_migrations where name=$1',[file]);
     if(!applied.rows.length){
       await db.exec('begin');
-      try{await db.exec(await fs.readFile(path.join(root,'supabase/migrations',file),'utf8'));await db.query('insert into public.local_migrations values($1)',[file]);await db.exec('commit');}
+      try{await db.exec(source);await db.query('insert into public.local_migrations values($1)',[file]);await db.exec('commit');}
       catch(e){await db.exec('rollback');throw e;}
     }
   }

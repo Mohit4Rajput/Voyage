@@ -54,3 +54,9 @@ Free Render web services sleep when idle. A sleeping service cannot process its 
 Record device/browser, timestamp, job IDs and results without recording tokens or private brief content. Automated mocked tests are not substitutes for these live acceptance checks.
 
 References: https://render.com/docs/web-services ; https://render.com/docs/free ; https://supabase.com/docs/guides/auth/auth-captcha ; https://supabase.com/docs/guides/auth/auth-email-templates
+
+## Linked-project migration reconciliation (2026-10-18)
+
+The CLI login was already present. This workspace is now linked to project P01. Five pre-existing 20261014 discovery migrations were fetched and preserved with HOSTED HISTORY ONLY comments. The local PGlite loader skips those retired discovery/vault definitions; Supabase retains their original applied history. The eight research/hosting migrations were applied successfully using `supabase db push --include-all --yes`. The include-all flag is needed because older remote versions have 14-digit identifiers and this repository's research migrations use 12-digit identifiers. Do not repair/revert the existing history to work around this ordering difference.
+
+The public Auth key was retrieved through the CLI and saved to ignored root .env. No user records were imported, no Auth configuration was pushed, and hosting_limits.enabled remains false until CAPTCHA/Auth are ready. Supabase schema deployment is complete; Render deployment and real-device acceptance are still pending.
